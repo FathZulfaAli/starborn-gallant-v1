@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 
 export default function TictactoeCard() {
 	const handleTTTClick = () => {
-		redirect("/tictactoe");
+		redirect("/game/tictactoe");
 	};
 	return (
 		<motion.div

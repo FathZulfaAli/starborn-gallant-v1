@@ -8,7 +8,7 @@ export default function TictactoePlayerRole({ onPick }: { onPick: (role: "X" | "
 				className='fixed top-0 left-0 w-full h-full backdrop-blur-lg flex items-center justify-center z-20'
 			>
 				<div className='bg-white p-4 rounded shadow-lg w-fit h-fit text-center'>
-					<h1 className='text-3xl font-bold mb-5'>Pick your Hero</h1>
+					<h1 className='text-3xl text-black font-bold mb-5'>Pick your Hero</h1>
 					<div className='flex items-center justify-center gap-x-2'>
 						<button
 							onClick={() => onPick("X")}

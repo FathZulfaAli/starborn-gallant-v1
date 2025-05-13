@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { checkGameStatus, getBotMove } from "./tictactoe-feature";
 import TictactoePlayerRole from "./tictactoe-player-role";
+import Image from "next/image";
 
 type Cell = "X" | "O" | null;
 
@@ -26,7 +27,7 @@ export default function TicTacToeBoard() {
 					const botStatus = checkGameStatus(newBoard);
 					if (botStatus) {
 						setMatchResult(botStatus);
-						setWinStreak(0); // bot ends streak
+						setWinStreak(0);
 					} else {
 						setTurn("player");
 					}
@@ -40,7 +41,7 @@ export default function TicTacToeBoard() {
 
 		const newBoard = [...board];
 		newBoard[index] = playerRole;
-		setBoard(newBoard); // <- always update the board
+		setBoard(newBoard);
 
 		const playerStatus = checkGameStatus(newBoard);
 
@@ -52,7 +53,7 @@ export default function TicTacToeBoard() {
 				setWinStreak(0);
 			}
 		} else {
-			setTurn("bot"); // game continues
+			setTurn("bot");
 		}
 	};
 
@@ -67,8 +68,21 @@ export default function TicTacToeBoard() {
 				<TictactoePlayerRole onPick={(role) => setPlayerRole(role)} />
 			) : (
 				<div className='min-h-screen bg-black text-white flex items-center justify-center px-4'>
-					<div className=''>
-						<span className='text-5xl text-white'>Earning</span>
+					<div className='bg-white/5 p-4 rounded-lg shadow-md'>
+						<div className='flex flex-row items-center mb-4'>
+							<Image
+								src={"/sg-logo.png"}
+								width={50}
+								height={50}
+								alt='logo'
+								className='object-contain'
+							/>
+							<div className='ml-2'>
+								<p className='text-2xl font-bold text-[#F2F4F8]'>Starborn</p>
+								<p className='text-2xl font-bold text-[#F2F4F8]'>Gallant</p>
+							</div>
+						</div>
+						<span className='text-5xl font-semibold text-white'>Match Earning</span>
 					</div>
 					<div className='flex flex-col md:flex-row gap-8 max-w-4xl w-full'>
 						{/* Game board */}
@@ -98,15 +112,27 @@ export default function TicTacToeBoard() {
 						<div className='flex flex-col text-right space-y-2 text-sm md:text-base font-mono tracking-wide bg-white/5 p-4 rounded-lg shadow-md'>
 							<p>
 								<span className='text-gray-400'>Your Role:</span>{" "}
-								<span className='text-blue-400 font-bold'>X</span>
+								<span
+									className={`font-bold ${
+										playerRole === "X" ? "text-blue-400" : "text-pink-400"
+									}`}
+								>
+									{playerRole}
+								</span>
 							</p>
 							<p>
 								<span className='text-gray-400'>AI Role:</span>{" "}
-								<span className='text-pink-400 font-bold'>O</span>
+								<span
+									className={`font-bold ${
+										aiRole === "X" ? "text-blue-400" : "text-pink-400"
+									}`}
+								>
+									{aiRole}
+								</span>
 							</p>
 							<p>
 								<span className='text-gray-400'>Turn:</span>{" "}
-								<span className='text-green-400'>{playerRole}</span>
+								<span className='text-green-400'>{turn}</span>
 							</p>
 							<p>
 								<span className='text-gray-400'>Game Status:</span>{" "}
@@ -125,12 +151,20 @@ export default function TicTacToeBoard() {
 								<span className='text-white'>{winStreak}</span>
 							</p>
 							{matchResult && (
-								<button
-									onClick={resetGame}
-									className='px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition'
-								>
-									Play Again
-								</button>
+								<div className='flex flex-col space-y-2 justify-center mt-4'>
+									<button
+										onClick={resetGame}
+										className='px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition'
+									>
+										Play Again
+									</button>
+									<button
+										onClick={resetGame}
+										className='px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition'
+									>
+										Stop and Claim
+									</button>
+								</div>
 							)}
 						</div>
 					</div>
