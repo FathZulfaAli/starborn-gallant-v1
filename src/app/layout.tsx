@@ -19,7 +19,7 @@ export default function RootLayout({
 			<body className={`antialiased`}>
 				<ReactQueryProvider>
 					<ReownAppkitProvider>
-						<div className='flex flex-col h-screen'>
+						<div className='flex flex-col h-screen bg-black'>
 							<Header />
 							{children}
 						</div>

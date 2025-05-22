@@ -59,3 +59,34 @@ export const getBotMove = (board: Cell[], playerRole: Cell): number => {
 	// Else just pick the first available spot
 	return board.findIndex((cell) => cell === null);
 };
+
+const staticRewards: Record<number, number> = {
+	1: 50_000_000,
+	2: 75_000_000,
+	3: 100_000_000,
+	4: 125_000_000,
+	5: 150_000_000,
+};
+
+export function winRewardCounter(win: number, ws: number): number {
+	let reward = 0;
+	if (ws) {
+		// just in case if user win streak below 5 streak
+		reward = staticRewards[ws] ?? 250_000_000 * Math.min(ws, 100);
+	} else {
+		reward = staticRewards[win];
+	}
+	return reward;
+}
+
+export function formatTokenAmount(raw: number | string, decimals = 9): string | number {
+	if (isNaN(Number(raw))) {
+		return 0o00;
+	}
+
+	const amount = Number(raw) / 10 ** decimals;
+	return amount.toLocaleString(undefined, {
+		minimumFractionDigits: 2,
+		maximumFractionDigits: 6,
+	});
+}
