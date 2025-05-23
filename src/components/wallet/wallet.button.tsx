@@ -13,6 +13,7 @@ export const ActionButtonList = () => {
 	const handleDisconnect = async () => {
 		try {
 			await disconnect();
+			redirect("/auth");
 		} catch (error) {
 			console.error("Failed to disconnect:", error);
 		}
@@ -50,7 +51,7 @@ export const ConnectButton = () => {
 		setModal(false);
 		disconnect();
 		setTimeout(() => {
-			redirect("/");
+			redirect("/auth");
 		}, 2000);
 	};
 

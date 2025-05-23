@@ -15,6 +15,7 @@ const list: ListItem[] = [
 	{ text: "Home", link: "/" },
 	{ text: "Account", link: "/account/{pubkey}" },
 ];
+const hiddenPaths = ["/game", "/auth", "/termsofserviceprivacyandpolicy"];
 
 export default function Header() {
 	const [selected, setSelected] = useState(list[0]);
@@ -23,7 +24,8 @@ export default function Header() {
 	const isMounted = useClientMounted();
 	const router = useRouter();
 	const pathname = usePathname();
-	const hideHeader = pathname.startsWith("/game");
+
+	const hideHeader = hiddenPaths.some((path) => pathname.startsWith(path));
 
 	useEffect(() => {
 		if (!address) {

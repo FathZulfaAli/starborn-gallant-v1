@@ -1,15 +1,22 @@
 "use client";
 
-import React, { useMemo } from "react";
-import { useParams } from "next/navigation";
+import React, { useEffect, useMemo } from "react";
+import { redirect, useParams } from "next/navigation";
 import { PublicKey } from "@solana/web3.js";
 import Image from "next/image";
 import { useSplTokenBalance } from "@/hooks/useSplTokenBalance";
 import HistoryTable from "./account-history-table";
+import { useAppKitAccount } from "@reown/appkit/react";
 
 export default function AccountUi() {
 	const nblrBalance = useSplTokenBalance("AEebqYuDhemMLP16MaLNEJSTFvCSzaiijTbQidFGs9m1");
 	const params = useParams();
+	const { status } = useAppKitAccount();
+
+	useEffect(() => {
+		if (status === "disconnected") redirect("/auth");
+	}, [status]);
+
 	const address = useMemo(() => {
 		if (!params.pubkey) {
 			return;
