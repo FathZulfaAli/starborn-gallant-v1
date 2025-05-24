@@ -1,25 +1,17 @@
-import React from 'react';
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import React, { use } from 'react';
 import Link from 'next/link';
+import { useGameHistory } from '@/hooks/useGameHistory';
 
-const histories = [
-  {
-    game: 'TicTacToe',
-    amount: '123412314123',
-    txLink: 'https://explorer.solana.com/tx/123412314123',
-  },
-];
+export default function HistoryTable({ address }: { address: string }) {
+  const { history } = useGameHistory(address);
 
-export default function HistoryTable() {
+  const trimExplorerUrl = (url: string): string => {
+    const base = 'https://explorer.solana.com/tx/';
+    const txHash = url.split('/tx/')[1]?.split('?')[0] ?? '';
+    const shortTx = txHash.slice(0, 22); // or 20–24 chars depending on your UI
+    return `${base}${shortTx}`;
+  };
+
   return (
     <>
       <section className="flex h-full w-full flex-col">
@@ -34,23 +26,31 @@ export default function HistoryTable() {
             </tr>
           </thead>
           <tbody>
-            {histories.map((history) => (
-              <tr key={history.game} className="hover:bg-black/10">
-                <td className="border-b px-4 py-2 font-medium">
-                  {history.game}
-                </td>
-                <td className="border-b px-4 py-2">{history.amount}</td>
-                <td className="border-b px-4 py-2 text-right">
-                  <Link
-                    href={history.txLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {history.txLink}
-                  </Link>
+            {history.length === 0 ? (
+              <tr>
+                <td colSpan={3} className="border-b px-4 py-2 text-center">
+                  No game history found.
                 </td>
               </tr>
-            ))}
+            ) : (
+              history.map((history) => (
+                <tr key={history.txLink} className="hover:bg-black/10">
+                  <td className="border-b px-4 py-2 font-medium">
+                    {history.game}
+                  </td>
+                  <td className="border-b px-4 py-2">{history.amount}</td>
+                  <td className="border-b px-4 py-2 text-right">
+                    <Link
+                      href={history.txLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {trimExplorerUrl(history.txLink)}
+                    </Link>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </section>

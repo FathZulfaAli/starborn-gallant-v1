@@ -29,7 +29,7 @@ export default function TicTacToeBoard() {
   const earnings = winRewardCounter(wins, winStreak);
   const formatedToken = formatTokenAmount(earnings);
   const aiRole = playerRole === 'X' ? 'O' : 'X';
-  const { status } = useAppKitAccount();
+  const { status, address } = useAppKitAccount();
 
   useEffect(() => {
     if (status === 'disconnected') redirect('/auth');
@@ -56,15 +56,23 @@ export default function TicTacToeBoard() {
   }, [turn, board, matchResult, playerRole, aiRole]);
 
   const totalLosses = totalPlays - wins;
+
+  // add total play and setLost
   useEffect(() => {
     if (matchResult === 'X' || matchResult === 'O' || matchResult === 'draw') {
       setTotalPlays((prev) => prev + 1);
     }
+  }, [matchResult]);
 
+  useEffect(() => {
     if (totalLosses >= 3) {
+      setTotalPlays(0);
+      setMatchResult(null);
+      setWins(0);
+      setWinStreak(0);
       setClaimModal(true);
     }
-  }, [matchResult]);
+  }, [totalLosses]);
 
   const handleClick = (index: number) => {
     if (board[index] !== null || matchResult !== null || turn !== 'player')
@@ -199,6 +207,7 @@ export default function TicTacToeBoard() {
             </div>
           </div>
           <ClaimRewardModal
+            address={address}
             rewardAmount={formatedToken}
             isOpen={claimModal}
             matchData={matchData}

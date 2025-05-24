@@ -1,3 +1,4 @@
+import { useGameHistory } from '@/hooks/useGameHistory';
 import { useGetReward } from '@/hooks/useGetReward';
 import { useGetTokenForReward } from '@/hooks/useGetTokenForReward';
 import Link from 'next/link';
@@ -5,6 +6,7 @@ import { redirect } from 'next/navigation';
 import React from 'react';
 
 type RewardModalProps = {
+  address?: string;
   isOpen: boolean;
   rewardAmount: number | string;
   matchData: {
@@ -16,6 +18,7 @@ type RewardModalProps = {
 };
 
 export default function ClaimRewardModal({
+  address,
   rewardAmount,
   isOpen,
   matchData,
@@ -23,6 +26,7 @@ export default function ClaimRewardModal({
 }: RewardModalProps) {
   const tokenMutation = useGetTokenForReward();
   const rewardMutation = useGetReward();
+  const { save } = useGameHistory(address ?? '');
 
   if (!isOpen) return null;
 
@@ -30,13 +34,23 @@ export default function ClaimRewardModal({
     const matchPlayed = matchData.matchPlayed;
     const matchWin = matchData.matchWin;
     const winStreak = matchData.winStreak;
+    const game = 'ttt';
     console.log('matchData', matchData);
 
     tokenMutation.mutate(
-      { matchPlayed, matchWin, winStreak },
+      { game, matchPlayed, matchWin, winStreak },
       {
         onSuccess: (token) => {
-          rewardMutation.mutate(token);
+          rewardMutation.mutate(token, {
+            onSuccess(link) {
+              save({
+                game: 'TicTacToe',
+                address: address ?? '',
+                amount: rewardAmount.toString(),
+                txLink: link,
+              });
+            },
+          });
         },
         onError: (error) => {
           console.error('Error getting token:', error);
@@ -89,25 +103,28 @@ export default function ClaimRewardModal({
                   {rewardAmount} <span className="text-primary">NBLR</span>
                 </p>
               </div>
-              <div className="flex w-full items-center justify-between space-x-3">
-                {/* <button
-									className='mt-8 w-1/2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-xl transition'
-									onClick={handleClaim}
-								>
-									{isLoading ? "Wait Okay" : "Claim Here"}
-								</button> */}
-                <Link
-                  href={'/'}
-                  className="mt-8 w-1/3 rounded-xl bg-red-600 px-4 py-2 font-semibold text-white transition hover:bg-red-700"
+              <div className="mt-8 flex w-full items-center justify-center space-x-3">
+                <button
+                  onClick={() => redirect('/')}
+                  disabled={!rewardMutation.isSuccess}
+                  className="w-1/3 cursor-pointer rounded-xl bg-red-600 px-4 py-2 font-semibold text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   Go Home
-                </Link>
+                </button>
                 <button
                   onClick={handleClick}
-                  disabled={tokenMutation.isPending || rewardMutation.isPending}
-                  className="w-1/3 cursor-pointer rounded-xl bg-purple-600 px-4 py-2 text-white transition hover:bg-purple-700 disabled:cursor-not-allowed disabled:opacity-50"
+                  disabled={
+                    tokenMutation.isPending ||
+                    rewardMutation.isPending ||
+                    rewardMutation.isSuccess
+                  }
+                  className="w-1/3 cursor-pointer rounded-xl bg-purple-600 px-4 py-2 font-semibold text-white transition hover:bg-purple-700 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  {rewardMutation.isPending ? 'Claiming...' : 'Claim'}
+                  {rewardMutation.isPending
+                    ? 'Claiming...'
+                    : rewardMutation.isSuccess
+                      ? 'Claimed'
+                      : 'Claim Reward'}
                 </button>
               </div>
 
