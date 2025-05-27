@@ -44,6 +44,15 @@ export default function HistoryTable({ address }: { address: string }) {
                       href={history.txLink}
                       target="_blank"
                       rel="noopener noreferrer"
+                      className="lg:hidden"
+                    >
+                      View
+                    </Link>
+                    <Link
+                      href={history.txLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hidden lg:block"
                     >
                       {trimExplorerUrl(history.txLink)}
                     </Link>

@@ -15,11 +15,9 @@ export function useAuth() {
 
         if (response.data.action === 'login') {
           return response.data.userData;
-        }
-
-        return response.data.message;
+        } else return response.data.message;
       } catch (error: any) {
-        console.error('Error in userRegister:', error.response?.data);
+        console.error('Error in userRegister:', error);
         return 'Failed to register user';
       }
     },

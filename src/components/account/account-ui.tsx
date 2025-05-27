@@ -45,13 +45,13 @@ export default function AccountUi() {
   }).format(today);
 
   return (
-    <div className="m-4 flex h-5/6 flex-col rounded-2xl bg-[#1d2951] p-5 px-7">
+    <div className="m-1.5 flex h-5/6 flex-col rounded-2xl bg-[#1d2951] p-3 lg:m-4 lg:p-5 lg:px-7">
       <div className="flex h-full w-full flex-row justify-between">
         <div className="h-fit w-fit rounded-lg bg-black p-3">
           <p className="text-2xl font-semibold text-[#F2F4F8]">Balance</p>
-          <div className="flex flex-row">
+          <div className="flex flex-row items-center">
             <p
-              className="cursor-pointer text-9xl font-bold"
+              className="cursor-pointer text-5xl font-bold lg:text-9xl"
               onClick={() => nblrBalance.refetch()}
             >
               {nblrBalance.data?.toString() ?? '0000'}
@@ -60,14 +60,14 @@ export default function AccountUi() {
             <p>NBLR</p>
             <Image
               src={'/nblr-logo.png'}
-              width={100}
-              height={25}
+              width={70}
+              height={70}
               alt="nblr"
               className="object-contain"
             />
           </div>
         </div>
-        <div className="flex flex-col">
+        <div className="hidden flex-col lg:flex">
           <p className="text-2xl font-semibold text-[#F2F4F8]">
             {trimmedWallet}
           </p>

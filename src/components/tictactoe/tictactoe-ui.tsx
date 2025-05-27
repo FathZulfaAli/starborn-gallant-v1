@@ -123,12 +123,14 @@ export default function TicTacToeBoard() {
         <TictactoePlayerRole onPick={(role) => setPlayerRole(role)} />
       ) : (
         <>
-          <div className="relative flex min-h-screen items-center justify-center bg-black px-4 text-white">
+          <div className="relative flex min-h-screen flex-col-reverse items-center justify-center bg-black px-4 text-white lg:flex-row">
             <RewardSideBar
+              matchResult={matchResult}
               wins={wins}
               total={totalPlays}
               streak={winStreak}
               reward={formatedToken.toString()}
+              resetGame={() => resetGame()}
               claimReward={() => setClaimModal(true)}
             />
             <div className="flex w-full max-w-4xl flex-col gap-8 md:flex-row">
@@ -154,7 +156,7 @@ export default function TicTacToeBoard() {
               </div>
 
               {/* Info panel */}
-              <div className="flex min-w-1/3 flex-col rounded-lg bg-white/5 p-7 text-right shadow-md">
+              <div className="hidden min-w-1/3 flex-col rounded-lg bg-white/5 p-7 text-right shadow-md lg:flex">
                 <p>
                   <span className="text-gray-400">Your Role:</span>{' '}
                   <span
